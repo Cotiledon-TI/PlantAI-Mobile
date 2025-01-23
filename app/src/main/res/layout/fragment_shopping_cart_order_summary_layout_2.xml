@@ -38,11 +38,13 @@
             <!-- Grey box containing form fields -->
             <LinearLayout
                 android:id="@+id/form_container"
-                android:layout_width="match_parent"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_box"
                 android:orientation="vertical"
                 android:padding="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <!-- Title -->
@@ -51,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="¿Tus datos están correctos?"
+                    android:text="@string/summary_1_data_question_text"
                     android:textColor="@color/primary_color"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -62,7 +64,7 @@
                 <Spinner
                     android:id="@+id/spinner_region"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/rounded_border_spinner"
@@ -80,7 +82,7 @@
                 <Spinner
                     android:id="@+id/spinner_comuna"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/rounded_border_spinner"
@@ -101,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="Dirección"
+                    android:text="@string/summary_2_address_label"
                     android:textColor="@color/deep_green"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -113,8 +115,11 @@
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_shopping_edittext"
                     android:fontFamily="@font/quicksand"
-                    android:hint="Avenida siempreviva"
-                    android:padding="10dp" />
+                    android:hint="@string/summary_2_address_hint"
+                    android:inputType="text|textAutoComplete"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    tools:ignore="Autofill" />
 
                 <!-- Number Label and Input -->
                 <TextView
@@ -122,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="Numero"
+                    android:text="@string/summary_2_number_label"
                     android:textColor="@color/deep_green"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -130,12 +135,14 @@
                 <EditText
                     android:id="@+id/street_number_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_shopping_edittext"
                     android:fontFamily="@font/quicksand"
-                    android:hint="123"
-                    android:padding="10dp" />
+                    android:hint="@string/summary_2_addressnum_hint"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    tools:ignore="Autofill" />
 
                 <!-- Department Label and Input -->
                 <TextView
@@ -143,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="Departamento/Casa/Oficina"
+                    android:text="@string/summary_2_address_house_label"
                     android:textColor="@color/deep_green"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -155,8 +162,11 @@
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_shopping_edittext"
                     android:fontFamily="@font/quicksand"
-                    android:hint="Opcional"
-                    android:padding="10dp" />
+                    android:hint="@string/summary_2_opcional_hint"
+                    android:inputType="text|textAutoComplete"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    tools:ignore="Autofill,DuplicateSpeakableTextCheck" />
 
                 <!-- Reference Label and Input -->
                 <TextView
@@ -164,7 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="Referencia"
+                    android:text="@string/summary_2_reference_label"
                     android:textColor="@color/deep_green"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -172,12 +182,14 @@
                 <EditText
                     android:id="@+id/reference_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_shopping_edittext"
                     android:fontFamily="@font/quicksand"
-                    android:hint="Opcional"
-                    android:padding="10dp" />
+                    android:hint="@string/register_next_card_info"
+                    android:inputType="text|textAutoComplete"
+                    android:padding="10dp"
+                    tools:ignore="Autofill" />
 
                 <!-- Receiver Label and Input -->
                 <TextView
@@ -185,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/quicksand"
-                    android:text="¿Quien recibe?"
+                    android:text="@string/summary_2_whoreceives_label"
                     android:textColor="@color/deep_green"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -196,8 +208,11 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/rounded_shopping_edittext"
                     android:fontFamily="@font/quicksand"
-                    android:hint="Juan Perez"
-                    android:padding="10dp" />
+                    android:hint="@string/summary_2_receivername_placeholder"
+                    android:inputType="text|textAutoComplete"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    tools:ignore="Autofill" />
 
             </LinearLayout>
 
@@ -208,7 +223,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:fontFamily="@font/quicksand"
-                android:text="Modificar información"
+                android:text="@string/summary_1_modifyinfo_label"
                 android:textColor="@color/primary_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -218,17 +233,17 @@
             <!-- Next Button - Outside the grey box -->
             <Button
                 android:id="@+id/btn_siguiente"
-                android:layout_width="200dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_shopping_button"
+                android:background="@drawable/rounded_button"
                 android:elevation="0dp"
                 android:fontFamily="@font/quicksand"
-                android:padding="0dp"
-                android:text="Finalizar compra"
+                android:text="@string/summary_2_finalize_button_text"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 app:cornerRadius="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

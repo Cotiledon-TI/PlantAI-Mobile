@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:fontFamily="@font/quicksand_medium"
-        android:text="Descripción"
+        android:text="@string/technical_details_description_label"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
@@ -28,14 +29,16 @@
         android:lineSpacingExtra="4dp"
         android:text="@string/product_description_example"
         android:textColor="@color/main_app"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:ignore="VisualLintLongText" />
 
     <TextView
         android:id="@+id/technical_description_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/quicksand_medium"
-        android:text="Detalle técnico"
+        android:text="@string/technical_details_title_label"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
@@ -51,6 +54,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_sun"
             android:src="@drawable/sun" />
 
         <TextView
@@ -58,8 +62,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Luz: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_light_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/lightRequirementText"
@@ -81,6 +86,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_waterdroplet"
             android:src="@drawable/opacity" />
 
         <TextView
@@ -88,8 +94,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Riego: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_irrigation_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/wateringText"
@@ -111,6 +118,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_water"
             android:src="@drawable/waves" />
 
         <TextView
@@ -118,8 +126,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Entorno: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_environment_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/environmentText"
@@ -141,6 +150,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_attention_image"
             android:src="@drawable/error_outline" />
 
         <TextView
@@ -148,8 +158,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Pet friendly: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_petfriendly_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/petFriendlyText"
@@ -166,7 +177,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/quicksand_medium"
-        android:text="Características"
+        android:text="@string/technical_details_carachteristics_label"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
@@ -182,6 +193,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_warning"
             android:src="@drawable/warning" />
 
         <TextView
@@ -189,8 +201,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Especie: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_species_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/speciesText"
@@ -212,6 +225,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_cloud"
             android:src="@drawable/cloud_outline" />
 
         <TextView
@@ -219,8 +233,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Ciclo: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_cycle_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/lifecycleText"
@@ -242,6 +257,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_grass_icon"
             android:src="@drawable/grass" />
 
         <TextView
@@ -249,8 +265,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Crecimiento: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_growth_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/growthText"
@@ -272,6 +289,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/cd_cloud"
             app:srcCompat="@drawable/filter_drama" />
 
         <TextView
@@ -279,8 +297,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Resistencia: "
-            android:textColor="@color/user_register_font" />
+            android:text="@string/technical_details_resistance_label"
+            android:textColor="@color/user_register_font"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/resistanceText"

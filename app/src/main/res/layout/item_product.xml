@@ -27,13 +27,15 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/rectangle_7">
+                android:background="@drawable/rectangle_7"
+                tools:ignore="UselessParent">
 
                 <ImageView
                     android:id="@+id/iv_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/rectangle_7"
+                    android:contentDescription="@string/cd_product_detail_image"
                     android:scaleType="centerCrop" />
 
                 <ImageView
@@ -42,6 +44,7 @@
                     android:layout_height="32dp"
                     android:layout_gravity="start|top"
                     android:layout_margin="8dp"
+                    android:contentDescription="@string/cd_petfriendly"
                     app:srcCompat="@drawable/pets" />
 
             </FrameLayout>
@@ -87,13 +90,14 @@
 
             <ImageButton
                 android:id="@+id/btn_add_to_cart"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="8dp"
                 android:layout_weight="0.01"
                 android:background="@drawable/rounded_image_background"
                 android:backgroundTint="@color/white"
+                android:contentDescription="@string/cd_shopping_cart_image"
                 android:src="@drawable/add_shopping_cart" />
         </LinearLayout>
 

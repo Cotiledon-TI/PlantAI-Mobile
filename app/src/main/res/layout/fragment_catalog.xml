@@ -29,6 +29,7 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:background="@drawable/rounded_image_background"
+            android:contentDescription="@string/cd_catalog_wallpaper"
             android:scaleType="center"
             app:srcCompat="@drawable/indoorplantsstudio" />
 
@@ -46,8 +47,8 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_filter"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:fontFamily="@font/quicksand_medium"
@@ -62,13 +63,14 @@
             app:iconGravity="textStart"
             app:iconPadding="8dp"
             app:iconSize="18dp"
-            app:iconTint="@color/primary_color" />
+            app:iconTint="@color/primary_color"
+            tools:ignore="VisualLintButtonSize" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_sort"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:fontFamily="@font/quicksand_medium"
@@ -83,7 +85,8 @@
             app:iconGravity="textEnd"
             app:iconPadding="8dp"
             app:iconSize="30dp"
-            app:iconTint="@color/primary_color" />
+            app:iconTint="@color/primary_color"
+            tools:ignore="VisualLintButtonSize" />
     </LinearLayout>
 
     <!-- Product Grid -->

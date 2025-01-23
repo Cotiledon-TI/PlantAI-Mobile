@@ -17,21 +17,23 @@
 
     <ImageView
         android:id="@+id/back_btn_ia"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:clickable="true"
-        app:tint="@color/main_app"
+        android:contentDescription="@string/cd_back_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ia_upper_banner"
-        app:srcCompat="@drawable/back_arrow_white" />
+        app:srcCompat="@drawable/back_arrow_white"
+        app:tint="@color/main_app" />
 
     <ImageView
         android:id="@+id/plant_ia_logo"
         android:layout_width="63dp"
         android:layout_height="48dp"
         android:layout_marginTop="26dp"
+        android:contentDescription="@string/cd_plantai_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ia_upper_banner"
@@ -67,10 +69,11 @@
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/quicksand_medium"
                 android:gravity="center_horizontal"
-                android:text="Para mejorar tu experiencia, puedes darnos más detalles para encontrar las plantas que buscas"
+                android:text="@string/ia_prompt_label_text"
                 android:textColor="@color/main_app"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck" />
 
             <Space
                 android:layout_width="match_parent"
@@ -94,12 +97,14 @@
                     android:fadeScrollbars="true"
                     android:fontFamily="@font/quicksand_medium"
                     android:gravity="center_horizontal|top"
+                    android:hint="@string/hint_ia_prompt"
                     android:inputType="text|textMultiLine"
                     android:maxLength="2000"
                     android:overScrollMode="never"
                     android:scrollbars="vertical"
                     android:textColor="@color/deep_green"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="Autofill" />
             </FrameLayout>
 
             <Space
@@ -108,13 +113,12 @@
 
             <Button
                 android:id="@+id/ia_prompt_continue_button"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/quicksand_medium"
                 android:gravity="center|center_horizontal"
-                android:padding="0dp"
-                android:text="Siguiente"
+                android:text="@string/register_next"
                 android:textAllCaps="false"
                 app:cornerRadius="8dp" />
         </LinearLayout>

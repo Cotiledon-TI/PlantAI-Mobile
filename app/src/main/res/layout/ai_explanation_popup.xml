@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Recomendación de la IA"
+            android:text="@string/ai_recommendation_text"
             android:textColor="@color/main_app"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:fontFamily="@font/quicksand_medium"
-            android:text="Entendido"
+            android:text="@string/ai_dismiss_message"
             android:textAllCaps="false"
             app:cornerRadius="8dp" />
     </LinearLayout>

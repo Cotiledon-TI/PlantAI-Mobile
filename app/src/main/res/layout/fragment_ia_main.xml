@@ -2,6 +2,7 @@
 <!-- Root LinearLayout - Using vertical orientation to stack elements from top to bottom -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -35,6 +36,7 @@
             android:layout_width="320dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/cd_main_image"
             android:foregroundGravity="center_horizontal"
             android:scaleType="centerCrop"
             android:src="@drawable/main_ia_image" />
@@ -64,6 +66,7 @@
                 android:id="@+id/ia_first_image_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/cd_ia_first_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/first_support_ia_image" />
         </androidx.cardview.widget.CardView>
@@ -82,6 +85,7 @@
                 android:id="@+id/ia_second_image_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/cd_ia_second_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/second_support_ia_image" />
         </androidx.cardview.widget.CardView>
@@ -100,6 +104,7 @@
                 android:id="@+id/ia_third_image_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/cd_ia_third_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/third_support_ia_image" />
         </androidx.cardview.widget.CardView>
@@ -113,7 +118,7 @@
         android:layout_margin="16dp"
         android:fontFamily="@font/quicksand_medium"
         android:gravity="center"
-        android:text="Usa tu camara para buscar"
+        android:text="@string/ia_invitation_text"
         android:textColor="@color/ia_color"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -127,22 +132,23 @@
         android:layout_marginEnd="26dp"
         android:buttonTint="@color/ia_color"
         android:fontFamily="@font/quicksand_medium"
-        android:text="Con tu permiso, puedes buscar la planta de tus sueños"
+        android:text="@string/ia_permission_text"
         android:textAlignment="center"
-        android:textColor="@color/secondary_grey" />
+        android:textColor="@color/ia_color"
+        android:textStyle="bold"
+        tools:ignore="VisualLintButtonSize" />
 
     <!-- Continue button at the bottom -->
     <Button
         android:id="@+id/ia_continue_button"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="16dp"
         android:fontFamily="@font/quicksand_medium"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:padding="0dp"
-        android:text="Continuar"
+        android:text="@string/ia_continue_button_text"
         android:textAllCaps="false"
         android:textSize="16sp" />
 

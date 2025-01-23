@@ -66,11 +66,13 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:contentDescription="@string/cd_profile"
                 android:src="@drawable/user" />
 
             <TextView
@@ -89,11 +91,13 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:contentDescription="@string/cd_address"
                 android:src="@drawable/point" />
 
             <TextView
@@ -112,11 +116,13 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:contentDescription="@string/cd_coupons"
                 android:src="@drawable/card_giftcard" />
 
             <TextView
@@ -136,11 +142,13 @@
             android:layout_marginBottom="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:contentDescription="@string/cd_notifications"
                 android:src="@drawable/bell" />
 
             <TextView
@@ -165,7 +173,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Mis compras"
+            android:text="@string/profile_mypurchases"
             android:textColor="@color/main_app"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -176,11 +184,13 @@
             android:layout_marginBottom="30dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+                android:contentDescription="@string/cd_purchasehistory"
                 android:src="@drawable/support_agent" />
 
             <TextView
@@ -207,11 +217,13 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingVertical="8dp">
+            android:paddingVertical="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/cd_finalize_session"
                 android:src="@drawable/exit_to_app" />
 
             <TextView

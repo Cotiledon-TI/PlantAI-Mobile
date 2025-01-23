@@ -19,7 +19,8 @@
         android:layout_marginBottom="25dp"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:orientation="horizontal">
@@ -28,45 +29,36 @@
             android:id="@+id/button_shopping_online"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="11dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_button"
             android:fontFamily="@font/quicksand"
+            android:gravity="center_vertical|center_horizontal"
             android:text="@string/profile_user_shopping_online"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp"
-            android:paddingStart="13dp"
-            android:paddingEnd="13dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="11dp"
-            android:minWidth="0dp"
-            android:minHeight="0dp"/>
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            tools:ignore="ButtonStyle" />
 
         <Button
             android:id="@+id/button_shopping_offline"
+            style="@style/CustomOutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="end"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="11dp"
             android:layout_weight="1"
-            android:layout_marginStart="9dp"
-            android:layout_marginEnd="14dp"
-            android:background="@drawable/button_transparent"
             android:fontFamily="@font/quicksand"
+            android:gravity="center_vertical|center_horizontal"
             android:text="@string/profile_user_shopping_offline"
             android:textAllCaps="false"
             android:textColor="@color/primary_color"
-            android:textSize="15sp"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp"
-            android:paddingStart="13dp"
-            android:paddingEnd="13dp"
-            android:minWidth="0dp"
-            android:minHeight="0dp"/>
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -99,20 +91,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_button"
             android:fontFamily="@font/quicksand"
             android:gravity="center_vertical"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:paddingStart="28dp"
-            android:paddingTop="0dp"
-            android:paddingEnd="28dp"
-            android:paddingBottom="3dp"
             android:text="@string/profile_user_cuppons_shopp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:layout_marginBottom="30dp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
