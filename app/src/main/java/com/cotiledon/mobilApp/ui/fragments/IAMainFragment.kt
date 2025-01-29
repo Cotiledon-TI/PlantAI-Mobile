@@ -33,7 +33,7 @@ class IAMainFragment : Fragment() {
     private lateinit var checkBox: CheckBox
     private lateinit var continueButton: Button
 
-    // Camera constants and variables
+    //Constantes de camara y permisos
     companion object {
         private const val CAMERA_PERMISSION_CODE = 1001
         private const val CAMERA_REQUEST_CODE = 1002
@@ -49,11 +49,9 @@ class IAMainFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_ia_main, container, false)
 
-        // Initialize views
         checkBox = view.findViewById(R.id.ia_checkBox)
         continueButton = view.findViewById(R.id.ia_continue_button)
 
-        // Set up button click listener
         continueButton.setOnClickListener {
             if (checkBox.isChecked) {
                 checkCameraPermissionAndOpen()
@@ -65,7 +63,7 @@ class IAMainFragment : Fragment() {
         return view
     }
 
-    // Function to check camera permission and open camera
+    //Funcion para pedir permisos y abrir la camara
     private fun checkCameraPermissionAndOpen() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -81,17 +79,17 @@ class IAMainFragment : Fragment() {
         }
     }
 
-    // Create a file to store the image
+    //Crear un archivo temporal para la foto
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        // Create an image file name with timestamp
+        //Crear un nombre de archivo temporal con un timestamp
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_${timeStamp}_"
 
-        // Get the directory for storing images
+        //Obtener el directorio para almacenar la foto
         val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
-        // Create the file
+        //Crear el archivo
         return File.createTempFile(
             imageFileName,
             ".jpg",
@@ -101,26 +99,25 @@ class IAMainFragment : Fragment() {
         }
     }
 
-    // Function to open camera
+    //Funcion para abrir la camara
     @SuppressLint("QueryPermissionsNeeded")
     private fun openCamera() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
+            //Asegurarse que hay una aplicacion que pueda manejar la accion
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
-                // Create the File where the photo should go
+                //Crear el archivo donde va a guardar la foto
                 photoFile = try {
                     createImageFile()
                 } catch (ex: IOException) {
-                    // Error occurred while creating the File
                     Toast.makeText(requireContext(), "Error creando el archivo de imagen", Toast.LENGTH_SHORT).show()
                     null
                 }
 
-                // Continue only if the File was successfully created
+                //Continuar solo si el archivo se pudo crear
                 photoFile?.also {
                     val photoURI: Uri = FileProvider.getUriForFile(
                         requireContext(),
-                        "com.cotiledon.mobilApp.fileprovider", // Update this to match your manifest
+                        "com.cotiledon.mobilApp.fileprovider",
                         photoFile!!
                     )
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
@@ -130,7 +127,7 @@ class IAMainFragment : Fragment() {
         }
     }
 
-    // Handle permission result
+    //Manejar el resultado del permiso
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -143,7 +140,7 @@ class IAMainFragment : Fragment() {
                     openCamera()
                 } else {
                     if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                        // Show dialog explaining why we need camera permission
+                        //Mostrar diálogo de porque necesitamos el permiso
                         AlertDialog.Builder(requireContext())
                             .setTitle("Se necesita permiso de la camara")
                             .setMessage("Necesitamos acceso a la camara para usar esta funcionalidad")
@@ -164,12 +161,12 @@ class IAMainFragment : Fragment() {
                             .create()
                             .show()
                     } else {
-                        // Permission permanently denied, direct user to settings
+                        //Si se denega el permiso, abrir la configuración para que lo permita
                         AlertDialog.Builder(requireContext())
                             .setTitle("Se necesita permiso de la camara")
                             .setMessage("Se ha denegaddo el permiso de la cámara. Por favor, vaya a los ajustes y permita el acceso a la cámara.")
                             .setPositiveButton("Ir a Ajustes") { _, _ ->
-                                // Open app settings
+                                //Abrir settings de la app
                                 startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                                     data = Uri.fromParts("package", requireActivity().packageName, null)
                                 })
@@ -185,22 +182,22 @@ class IAMainFragment : Fragment() {
         }
     }
 
-    // Handle camera result
+    //Manejar resultado de la cámara
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // Show dialog to confirm or retake picture
+            //Mostrar diálogo para retomar o utilizar la foto
             showImageConfirmationDialog()
         }
     }
 
-    // Dialog to confirm or retake picture
+    //Diálogo para confirmar la foto
     private fun showImageConfirmationDialog() {
-        // Get file size
+        //Obtener el tamaño de la foto
         val fileSize = photoFile?.length() ?: 0L
         val fileSizeMB = bytesToMB(fileSize)
 
-        // Log the file size
+        //Mostrar el tamaño de la foto
         Log.d("Captura de imagen", "Tamaño de la foto: ${String.format("%.2f", fileSizeMB)} MB")
 
         AlertDialog.Builder(requireContext())
@@ -221,19 +218,18 @@ class IAMainFragment : Fragment() {
         return bytes.toDouble() / (1024 * 1024)
     }
 
-    // Navigate to prompt fragment
+    //Navegar al fragment de prompt
     private fun navigateToPromptFragment() {
-        // Create bundle with photo path
+        //Crear un bundle con la ruta de la imagen
         val bundle = Bundle().apply {
             putString("photo_path", currentPhotoPath)
         }
 
-        // Create and setup prompt fragment
+        //Crear y pasar argumentos al fragment
         val promptFragment = IAPromptFragment().apply {
             arguments = bundle
         }
 
-        // Perform fragment transaction
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, promptFragment)
             .addToBackStack(null)

@@ -24,20 +24,19 @@ import java.util.Locale
 
 class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
 
-    // Interface to communicate filter changes
+    //Interfaz para comunicar los campos de filtros
     interface FilterListener {
         fun onFiltersApplied(filterParams: PlantFilterParams)
         fun getCurrentFilters(): PlantFilterParams?
     }
 
-    private var maxProductPrice: Float = 100000f  // Default max value if no products
-    private val minAllowedPrice: Float = 0f      // Minimum value always 0
-    private val minMaxPrice: Float = 1000f       // Minimum allowed maximum value
+    private var maxProductPrice: Float = 100000f  //Valor máximo por default
+    private val minAllowedPrice: Float = 0f      //Valor mínimo siempre es 0
+    private val minMaxPrice: Float = 1000f       //Valor mínimo permitido
 
     private var filterListener: FilterListener? = null
     private lateinit var currentFilters: PlantFilterParams
 
-    // Views that we'll need to interact with
     private lateinit var budgetSlider: RangeSlider
     private lateinit var budgetValueText: TextView
     private lateinit var sizeGroup: RadioGroup
@@ -53,21 +52,16 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate our custom layout for the bottom sheet
         return inflater.inflate(R.layout.filter_bottom_sheet_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Initialize all our views
         initializeViews(view)
 
-        // Set up the bottom sheet behavior
         setupBottomSheetBehavior()
 
-        // If we have existing filters, initialize the UI with them
-        // Initialize filters from parent
+        //Si ya hay filtros guardados, se cargan
         currentFilters = filterListener?.getCurrentFilters()?.copy() ?: PlantFilterParams()
         initializeFilterValues()
         setupFilterListeners()
@@ -75,24 +69,24 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // Try multiple approaches to find the listener
+        //Intentar diferentes maneras de obtener el listener
         filterListener = when {
-            // First, check if the parent fragment implements the interface
+            //Checkeamos si el fragmento padre implementa el listener
             parentFragment is FilterListener -> parentFragment as FilterListener
-            // If not, check if the containing activity implements it
+            //Si no, checkeamos si el activity implementa el listener
             context is FilterListener -> context
-            // If neither, check if there's a target fragment that implements it
+            //Si tmapoco, checkeamos si el fragmento objetivo implementa el listener
             targetFragment is FilterListener -> targetFragment as FilterListener
             else -> {
-                // If we still haven't found a listener, let's try one more time with the parent fragment manager
+                //Si no hay ninguno de los anteriores, volvemos a intentar con el parent
                 parentFragmentManager.fragments.firstOrNull { it is FilterListener } as? FilterListener
-                    ?: throw RuntimeException("Either parent fragment, target fragment, or activity must implement FilterListener")
+                    ?: throw RuntimeException("Ya sea el fragmento padre, la actividad o el fragmento " +
+                            "objetivo debe implementar el listener de filtros.")
             }
         }
     }
 
     private fun initializeViews(view: View) {
-        // Find all our views using findViewById
         budgetSlider = view.findViewById(R.id.budgetSlider)
         budgetValueText = view.findViewById(R.id.budgetValue)
         sizeGroup = view.findViewById(R.id.sizeGroup)
@@ -108,70 +102,65 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupBudgetSlider() {
         budgetSlider.apply {
-            // Set the value range (in raw integers, not formatted)
-            valueFrom = minAllowedPrice  // 0
-            valueTo = maxOf(maxProductPrice, minMaxPrice)  // Max price from products or minimum allowed max
-
-            // Set initial values
+            //Settear los valores iniciales
+            valueFrom = minAllowedPrice
+            valueTo = maxOf(maxProductPrice, minMaxPrice)
             values = listOf(valueFrom, valueTo)
 
-            // Set step size for price increments
-            stepSize = 1000f  // Steps of 1000 pesos
+            //Settear steps de 1000
+            stepSize = 1000f
 
-            // Add label formatter to show formatted currency
+            //Formateamos el texto a la moneda chilena
             setLabelFormatter { value ->
                 NumberFormat.getCurrencyInstance(Locale("es", "CL"))
                     .format(value.toDouble())
             }
 
-            // Update the text display
             updateBudgetText(valueFrom, valueTo)
         }
 
-        // Add slider change listener
+        //Agregar el listener para el slider
         budgetSlider.addOnChangeListener { slider, _, _ ->
             val values = slider.values
-            // Allow minimum value to change - no longer force it to 0
+            //Permitir que el valor mínimo cambie
             val minValue = values[0]
             val maxValue = values[1]
 
-            // Update the filter values with raw integer values
+            //Actualizar el valor de los extremos
             currentFilters.apply {
                 minPrice = minValue.toInt()
                 maxPrice = maxValue.toInt()
             }
 
-            // Update the display text
             updateBudgetText(minValue, maxValue)
         }
     }
 
     private fun setupBottomSheetBehavior() {
-        // Get the BottomSheetDialog and customize its behavior
         (dialog as? BottomSheetDialog)?.let { bottomSheetDialog ->
             bottomSheetDialog.behavior.apply {
-                // Calculate where the bottom sheet should appear
+                //Calcular donde debe estar el sheet
                 val filterButtonBottom = requireArguments().getInt(ARG_FILTER_BUTTON_Y, 0)
                 val screenHeight = resources.displayMetrics.heightPixels
                 val peekHeight = screenHeight - filterButtonBottom
 
-                // Set up the behavior properties
+                //Settear las propiedades
                 setPeekHeight(peekHeight)
                 maxHeight = peekHeight
                 isDraggable = false
                 state = BottomSheetBehavior.STATE_EXPANDED
 
-                // Add a callback to handle state changes
+                //Agregar un listener para mantener el sheet en la altura correcta
                 addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        // Ensure the sheet stays at the correct height
+                        //Asegurarse de que el sheet se mantenga en la altura correcta
                         if (newState == BottomSheetBehavior.STATE_DRAGGING) {
                             state = BottomSheetBehavior.STATE_EXPANDED
                         }
                     }
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        // Not needed for our implementation
+                        //No es necesario
                     }
                 })
             }
@@ -179,19 +168,19 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun setMaxProductPrice(price: Float) {
-        maxProductPrice = maxOf(price, minMaxPrice)  // Ensure it's at least 1000
-        // Update the slider if it's initialized
+        maxProductPrice = maxOf(price, minMaxPrice)  //Asegurar que el precio no sea menor que
+        // minMaxPrice
         if (::budgetSlider.isInitialized) {
             setupBudgetSlider()
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        // Create a customized BottomSheetDialog
+        //Crear un BottomSheetDialog personalizado
         return BottomSheetDialog(requireContext(), theme).apply {
-            // Customize the window properties
+            //Customizar la apariencia
             window?.apply {
-                // Add a semi-transparent background
+                //Agregar transparencia
                 setDimAmount(0.3f)
                 setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
@@ -199,38 +188,30 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun getTheme(): Int {
-        // Use our custom theme for the bottom sheet
         return R.style.BottomSheetDialogTheme
     }
 
     private fun setupFilterListeners() {
         budgetSlider.addOnChangeListener { slider, _, _ ->
             val values = slider.values
-
-            // First value (min) is always 0
             val minValue = minAllowedPrice
-
-            // Ensure max value is at least minMaxPrice
             val maxValue = maxOf(values[1], minMaxPrice)
 
-            // Update the filter values
             currentFilters.apply {
                 minPrice = minValue.toInt()
                 maxPrice = maxValue.toInt()
             }
 
-            // Add apply button listener
             applyButton.setOnClickListener {
-                // Create a new filter params object with all current selections
                 val appliedFilters = PlantFilterParams().apply {
-                    // Price range (only include if slider was moved)
+                    //Rango de precios (si se ha cambiado)
                     if (budgetSlider.values[0] > minAllowedPrice ||
                         budgetSlider.values[1] < budgetSlider.valueTo) {
                         minPrice = budgetSlider.values[0].toInt()
                         maxPrice = budgetSlider.values[1].toInt()
                     }
 
-                    // Size selection
+                    //Seleccion de tamaño
                     size = when (sizeGroup.checkedRadioButtonId) {
                         R.id.sizeS -> PlantFilterParams.SIZE_S
                         R.id.sizeM -> PlantFilterParams.SIZE_M
@@ -239,10 +220,10 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                         else -> null
                     }
 
-                    // Pet friendly selection
+                    //Seleccion de pet friendly
                     petFriendly = if (petFriendlyCheckbox.isChecked) true else null
 
-                    // Light selection
+                    //Seleccion de luz
                     lighting = when (lightGroup.checkedRadioButtonId) {
                         R.id.lightDirect -> 1
                         R.id.lightPartial -> 2
@@ -250,7 +231,7 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                         else -> null
                     }
 
-                    // Temperature selection
+                    //Seleccion de temperatura
                     temperatureTolerance = when (temperatureGroup.checkedRadioButtonId) {
                         R.id.tempWarm -> 1
                         R.id.tempMild -> 2
@@ -258,7 +239,7 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                         else -> null
                     }
 
-                    // Irrigation selection
+                    //Seleccion de riego
                     irrigationType = when (irrigationGroup.checkedRadioButtonId) {
                         R.id.irrigationManual -> 1
                         R.id.irrigationDrip -> 2
@@ -270,41 +251,40 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                         else -> null
                     }
 
-                    // Preserve any existing sort parameters
+                    //preservar cualquier dato de orden
                     orderBy = currentFilters.orderBy
                     order = currentFilters.order
                 }
 
-                // Pass the filters back to the fragment
+                //Pasar los filtros aplicados
                 filterListener?.onFiltersApplied(appliedFilters)
                 dismiss()
             }
 
             clearButton.setOnClickListener {
-                // Reset all UI elements
+                //Resetear los filtros
                 resetFilters()
 
-                // Create empty filter params (preserving sort)
+                //Crear filtros limpios, preservando los datos de orden
                 val emptyFilters = PlantFilterParams().apply {
                     orderBy = currentFilters.orderBy
                     order = currentFilters.order
                 }
 
-                // Apply empty filters
+                //Aplicar filtros limpios
                 filterListener?.onFiltersApplied(emptyFilters)
                 dismiss()
             }
 
-            // Update the display text
             updateBudgetText(minValue, maxValue)
 
-            // Force the values to maintain our rules
+            //Forzar los valores del slider para mantener la apariencia
             if (values[0] != minValue || values[1] != maxValue) {
                 slider.values = listOf(minValue, maxValue)
             }
         }
 
-        // Size radio group listener
+        //Listener para el grupo de tamaños
         sizeGroup.setOnCheckedChangeListener { _, checkedId ->
             currentFilters.size = when (checkedId) {
                 R.id.sizeS -> PlantFilterParams.SIZE_S
@@ -315,12 +295,12 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Pet friendly checkbox listener
+        //Listener para el checkbox de pet friendly
         petFriendlyCheckbox.setOnCheckedChangeListener { _, isChecked ->
             currentFilters.petFriendly = if (isChecked) true else null
         }
 
-        // Light group listener - assuming backend uses integers 1-3 for lighting types
+        //Listener para el grupo de iluminacion
         lightGroup.setOnCheckedChangeListener { _, checkedId ->
             currentFilters.lighting = when (checkedId) {
                 R.id.lightDirect -> 1  // Sol Directo
@@ -330,7 +310,7 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Temperature tolerance listener - assuming backend uses integers 1-3 for temperature types
+        //Listener para el grupo de temperaturas
         temperatureGroup.setOnCheckedChangeListener { _, checkedId ->
             currentFilters.temperatureTolerance = when (checkedId) {
                 R.id.tempWarm -> 1    // Cálido
@@ -340,7 +320,7 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Irrigation type listener - assuming backend uses integers 1-7 for irrigation types
+        //Listener para el grupo de riegos
         irrigationGroup.setOnCheckedChangeListener { _, checkedId ->
             currentFilters.irrigationType = when (checkedId) {
                 R.id.irrigationManual -> 1      // Manual
@@ -354,16 +334,14 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Clear filters button
         clearButton.setOnClickListener {
             resetFilters()
         }
     }
 
     private fun initializeFilterValues() {
-        // Set initial values based on current filters
+        //Inicializar los valores de los filtros
         currentFilters.apply {
-            // Set budget slider
             minPrice?.let { min ->
                 maxPrice?.let { max ->
                     budgetSlider.values = listOf(min.toFloat(), max.toFloat())
@@ -371,7 +349,6 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                 }
             }
 
-            // Set size radio button
             when (size) {
                 PlantFilterParams.SIZE_S -> sizeGroup.check(R.id.sizeS)
                 PlantFilterParams.SIZE_M -> sizeGroup.check(R.id.sizeM)
@@ -379,10 +356,8 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                 PlantFilterParams.SIZE_XL -> sizeGroup.check(R.id.sizeXL)
             }
 
-            // Set pet friendly checkbox
             petFriendlyCheckbox.isChecked = petFriendly == true
 
-            // Set lighting radio button
             lighting?.let {
                 val lightId = when (it) {
                     1 -> R.id.lightDirect
@@ -393,7 +368,6 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                 lightId?.let { id -> lightGroup.check(id) }
             }
 
-            // Set temperature radio button
             temperatureTolerance?.let {
                 val tempId = when (it) {
                     1 -> R.id.tempWarm
@@ -404,7 +378,6 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
                 tempId?.let { id -> temperatureGroup.check(id) }
             }
 
-            // Set irrigation radio button
             irrigationType?.let {
                 val irrigationId = when (it) {
                     1 -> R.id.irrigationManual
@@ -429,13 +402,13 @@ class PlantFiltersBottomSheet : BottomSheetDialogFragment() {
         temperatureGroup.clearCheck()
         irrigationGroup.clearCheck()
 
-        // Reset filter params
+        //Resetear los valores de los filtros
         currentFilters = PlantFilterParams()
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateBudgetText(min: Float, max: Float) {
-        // Format the values as currency for display
+        //Formatear el texto a la moneda chilena
         val formatter = NumberFormat.getCurrencyInstance(Locale("es", "CL"))
         budgetValueText.text = "${formatter.format(min.toDouble())} - ${formatter.format(max.toDouble())}"
     }

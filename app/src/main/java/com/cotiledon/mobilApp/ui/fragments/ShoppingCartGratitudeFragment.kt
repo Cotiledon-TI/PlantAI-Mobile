@@ -50,7 +50,7 @@ class ShoppingCartGratitudeFragment : Fragment() {
         continueShoppingButton.setOnClickListener {
 
             if (tokenManager.isVisitor()) {
-                // If they are a visitor, clear their credentials
+                //Si son visitantes, se debe cerrar la sesión
                 handleVisitorLogout()
             }
 
@@ -73,18 +73,13 @@ class ShoppingCartGratitudeFragment : Fragment() {
 
     private fun handleVisitorLogout() {
         try {
-            // Clear the token manager credentials
             tokenManager.clearAuthData()
-
-            // Clear any stored visitor details in OrderManager
             OrderManager.clearVisitorDetails()
 
-            // Clear any stored cart data
             val cartManager = CartStorageManager(requireContext(), tokenManager)
             cartManager.clearCart()
 
-            // Since the user profile might have been created during checkout,
-            // we should ensure it's cleared from any local storage
+            //Debemos asegurarnos de limpiar cualquier storage local
             context?.getSharedPreferences("visitor_prefs", Context.MODE_PRIVATE)
                 ?.edit()
                 ?.clear()
@@ -92,8 +87,7 @@ class ShoppingCartGratitudeFragment : Fragment() {
 
         } catch (e: Exception) {
             Log.e("ShoppingCartGratitude", "Error clearing visitor credentials", e)
-            // Even if there's an error, we'll continue with navigation
-            // since this is the end of the flow
+            //Incluso si hay un error, se debe cerrar la sesión ya que esta es la ultima pantalla
         }
     }
 

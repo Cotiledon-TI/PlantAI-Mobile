@@ -1,5 +1,6 @@
 package com.cotiledon.mobilApp.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import android.os.Bundle
@@ -62,7 +63,6 @@ class UserRegisterFragment : Fragment() {
         nextButton = view.findViewById(R.id.button_register_next)
     }
 
-    // Update setupClickListeners to add more robust error handling
     private fun setupClickListeners() {
         nextButton.setOnClickListener {
             try {
@@ -96,11 +96,10 @@ class UserRegisterFragment : Fragment() {
         }
     }
 
-    // Update the validateInputs function with comprehensive validation
+
     private fun validateInputs(): Boolean {
         var isValid = true
 
-        // Password validation
         if (passwordEditText.text.toString() != passwordConfirmEditText.text.toString()) {
             Toast.makeText(context, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
             isValid = false
@@ -111,7 +110,6 @@ class UserRegisterFragment : Fragment() {
             isValid = false
         }
 
-        // Name validation
         if (!isValidName(nameEditText.text.toString())) {
             nameEditText.error = "El nombre solo puede contener letras y guiones"
             isValid = false
@@ -122,19 +120,16 @@ class UserRegisterFragment : Fragment() {
             isValid = false
         }
 
-        // Email validation
         if (!isValidEmail(emailEditText.text.toString())) {
             emailEditText.error = "El correo electrónico no es válido"
             isValid = false
         }
 
-        // RUT validation
         if (!isValidRut(rutEditText.text.toString())) {
             rutEditText.error = "El RUT no es válido"
             isValid = false
         }
 
-        // Birthday validation
         if (!isValidBirthDate(birthdayEditText.text.toString())) {
             birthdayEditText.error = "La fecha de nacimiento no es válida"
             isValid = false
@@ -144,14 +139,14 @@ class UserRegisterFragment : Fragment() {
     }
 
     private fun isValidPassword(password: String): Boolean {
-        // Password must have at least 8 characters, one uppercase, one lowercase,
-        // one number and one special character
+        // Contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número
+        // y un caracter especial
         val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
         return password.matches(passwordRegex.toRegex())
     }
 
     private fun isValidName(name: String): Boolean {
-        // Only letters and hyphens allowed
+        //Solo letras y guiones
         val nameRegex = "^[A-Za-zÁ-ÿ-]+$"
         return name.matches(nameRegex.toRegex())
     }
@@ -180,17 +175,18 @@ class UserRegisterFragment : Fragment() {
     private fun isValidRut(rut: String): Boolean {
         val cleanRut = rut.replace(".", "").replace("-", "")
 
-        // Format validation
+        //Validacion de formato de RUT
         val rutRegex = "^\\d{7,8}[0-9K]$".toRegex()
         if (!cleanRut.matches(rutRegex)) return false
 
-        // Split between main number and verification digit
+        //Separar el cuerpo del digito verificador
         val body = cleanRut.substring(0, cleanRut.length - 1)
         val verificationDigit = cleanRut.last()
 
-        // Calculate verification digit
+        //Calcular el digito verificador
         val calculatedVerificationDigit = calculateRutVerificationDigit(body)
 
+        //Validar el digito verificador
         return verificationDigit.toString() == calculatedVerificationDigit
     }
 
@@ -199,8 +195,8 @@ class UserRegisterFragment : Fragment() {
     }
 
     private fun isValidBirthDate(date: String): Boolean {
-        // ISO 8601 format: YYYY-MM-DD
-        val dateRegex = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$".toRegex()
+        // ISO 8601 formato: DD-MM-YYYY
+        val dateRegex = "^\\d{1,2}-\\d{1,2}-\\d{4}$".toRegex()
 
         if (!date.matches(dateRegex)) return false
 
@@ -210,10 +206,8 @@ class UserRegisterFragment : Fragment() {
             val month = parts[1].toInt()
             val day = parts[2].toInt()
 
-            // Month validation
             if (month < 1 || month > 12) return false
 
-            // Days validation according to month
             val daysInMonth = when (month) {
                 1, 3, 5, 7, 8, 10, 12 -> 31
                 4, 6, 9, 11 -> 30
@@ -221,10 +215,8 @@ class UserRegisterFragment : Fragment() {
                 else -> return false
             }
 
-            // Day validation within month range
             if (day < 1 || day > daysInMonth) return false
 
-            // Year range validation
             return year > 1900 && year <= Calendar.getInstance().get(Calendar.YEAR)
         } catch (e: Exception) {
             return false
@@ -248,17 +240,18 @@ class UserRegisterFragment : Fragment() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
 
         DatePickerDialog(
             requireContext(),
             { _, year, month, day ->
-                // Format the date in ISO 8601 (YYYY-MM-DD)
-                val formattedDate = String.format("%04d-%02d-%02d", year, month + 1, day)
+                // Formatear la fecha para DD-MM-YYYY
+                val formattedDate = String.format("%02d-%02d-%04d", day, month + 1, year)
                 birthdayEditText.setText(formattedDate)
 
-                // Validate the date immediately
+                //Validar la fecha inmediatamente
                 if (!isValidBirthDate(formattedDate)) {
                     birthdayEditText.error = "Fecha de nacimiento inválida"
                 }
@@ -267,9 +260,9 @@ class UserRegisterFragment : Fragment() {
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).apply {
-            // Set max date to today
+            //Fecha actual es la maxima
             datePicker.maxDate = System.currentTimeMillis()
-            // Set min date to 1900
+            //Fecha minima es 01-01-1900
             calendar.set(1900, 0, 1)
             datePicker.minDate = calendar.timeInMillis
         }.show()

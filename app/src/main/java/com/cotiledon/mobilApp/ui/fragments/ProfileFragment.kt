@@ -14,7 +14,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the fragment's layout - make sure to create fragment_profile.xml
         return inflater.inflate(R.layout.fragment_profile,container, false)
     }
 

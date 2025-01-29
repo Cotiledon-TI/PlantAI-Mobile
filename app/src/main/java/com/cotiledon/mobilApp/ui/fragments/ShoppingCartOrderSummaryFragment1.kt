@@ -39,10 +39,7 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize the back button from the included layout
         backButton = view.findViewById(R.id.btn_back)
-
-        // Set up back button click listener
         setupBackNavigation()
 
         tokenManager = TokenManager(requireContext())
@@ -50,7 +47,7 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
         initializeViews(view)
         setupClickListeners()
 
-        // Handle different user types
+        //Entender si es visitante o usuario registrado
         if (tokenManager.isVisitor()) {
             handleVisitorFlow()
         } else {
@@ -76,22 +73,22 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
     }
 
     private fun handleVisitorFlow() {
-        // Start with empty fields for visitors
+        //Se comienza con los campos vacios para visitante
         clearFields()
         enableAllFields(true)
 
-        // Check if we have previously entered visitor details
+        //Checkear si existen detalles de visitante ingresados previamente
         OrderManager.getVisitorDetails()?.let { details ->
             populateFields(details)
         }
     }
 
     private fun handleRegisteredUserFlow() {
-        // Load existing profile data and disable fields by default
+        //Cargar detalles de usuario registrado
         loadExistingDetails()
         enableAllFields(false)
 
-        // Allow modification through the modify button
+        //Permitir modificar la información
         modifyInfoText.visibility = View.VISIBLE
     }
 
@@ -112,7 +109,6 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
     }
 
     private fun initializeViews(view: View) {
-        // Update these IDs to match the layout
         nameEditText = view.findViewById(R.id.edit_text_name)
         lastNameEditText = view.findViewById(R.id.edit_text_lastname)
         emailEditText = view.findViewById(R.id.edit_text_email)
@@ -175,7 +171,7 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
     }
 
     private fun isValidName(name: String): Boolean {
-        // Only letters and hyphens allowed
+        //Solo se permite letras y guiones
         val nameRegex = "^[A-Za-zÁ-ÿ-]+$"
         return name.matches(nameRegex.toRegex())
     }
@@ -183,17 +179,18 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
     private fun isValidRut(rut: String): Boolean {
         val cleanRut = rut.replace(".", "").replace("-", "")
 
-        // Format validation
+        //Validacion de formato de RUT
         val rutRegex = "^\\d{7,8}[0-9K]$".toRegex()
         if (!cleanRut.matches(rutRegex)) return false
 
-        // Split between main number and verification digit
+        //Separar el cuerpo del digito verificador
         val body = cleanRut.substring(0, cleanRut.length - 1)
         val verificationDigit = cleanRut.last()
 
-        // Calculate verification digit
+        //Calcular el digito verificador
         val calculatedVerificationDigit = calculateRutVerificationDigit(body)
 
+        //Validar el digito verificador
         return verificationDigit.toString() == calculatedVerificationDigit
     }
 
@@ -219,19 +216,19 @@ class ShoppingCartOrderSummaryFragment1 : Fragment() {
             lastName = lastNameEditText.text.toString(),
             email = emailEditText.text.toString(),
             phone = phoneEditText.text.toString(),
-            address = "", // Will be filled in next fragment
+            address = "", //Estos datos son llenados en el siguiente fragment
             commune = "",
             region = "",
             department = null,
             streetNumber = null
         )
 
-        // For visitors, we store the details for later profile update
+        //Para visitantes guardar los detalles en caso de que se quiera crear una cuenta
         if (tokenManager.isVisitor()) {
             OrderManager.saveVisitorDetails(shippingDetails)
         }
 
-        // Save to OrderManager for the checkout process
+        //Guardamos todos los detalles para seguir con la compra
         OrderManager.shippingDetails = shippingDetails
     }
 

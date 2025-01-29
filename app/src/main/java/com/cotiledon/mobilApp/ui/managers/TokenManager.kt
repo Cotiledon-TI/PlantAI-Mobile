@@ -25,11 +25,11 @@ class TokenManager (private val context: Context) {
         Log.d("TokenManager", "Current prefs content before save: ${prefs.all}")
 
         try {
-            // Clear existing data first
+            //Limpiamos los datos antiguos
             editor.clear()
             editor.commit()
 
-            // Save new data
+            //Guardamos la nueva información
             editor.putString(KEY_TOKEN, token)
             editor.putInt(KEY_USER_ID, userId)
             editor.putLong(KEY_TOKEN_EXPIRATION, tokenExpiration)
@@ -37,7 +37,7 @@ class TokenManager (private val context: Context) {
             val committed = editor.commit()
             Log.d("TokenManager", "Save committed: $committed")
 
-            // Verify immediate save
+            //Verificar que se haya guardado correctamente
             val savedToken = prefs.getString(KEY_TOKEN, null)
             Log.d("TokenManager", "Immediate verification - Saved token: $savedToken")
 
@@ -60,7 +60,7 @@ class TokenManager (private val context: Context) {
     }
 
     fun saveVisitorAuthData(visitorResponse: VisitorResponse) {
-        // Don't overwrite existing visitor data if we already have it
+        //No sobreescribimos los datos antiguos si ya tenemos un token
         if (!isVisitor()) {
             editor.apply {
                 putString(KEY_TOKEN, visitorResponse.access_token)
@@ -173,7 +173,7 @@ class TokenManager (private val context: Context) {
         tokenExpirationTimer?.cancel()
         tokenExpirationTimer = null
 
-        // Verify clear operation
+        //Verificar la operación de limpieza
         Log.d("TokenManager", "Auth data cleared. Current prefs content: ${prefs.all}")
     }
 

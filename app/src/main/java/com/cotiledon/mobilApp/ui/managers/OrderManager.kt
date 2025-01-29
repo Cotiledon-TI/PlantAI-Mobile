@@ -36,10 +36,10 @@ object OrderManager {
             calendar.add(Calendar.DAY_OF_MONTH, 3)
             val fechaEntrega = dateFormat.format(calendar.time)
 
-            // Create DireccionEnvio with properly separated address components
+            //Crear la dirección de envío con el formato adecuado
             val direccionEnvio = DireccionEnvio(
                 comuna = details.commune,
-                calle = details.address,        // Now contains only street name
+                calle = details.address,
                 numero = details.streetNumber ?: "",
                 departamento = details.department ?: "",
                 referencia = details.reference ?: ""

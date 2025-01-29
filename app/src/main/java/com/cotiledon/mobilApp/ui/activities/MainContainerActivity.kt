@@ -29,30 +29,19 @@ class MainContainerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Set up edge-to-edge
+        //Esconder la barra de notificaciones
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        // Change the color of the navigation bar to trasnparent
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.isAppearanceLightNavigationBars = true
-
         enableEdgeToEdge()
-
         setContentView(R.layout.activity_main_container)
-
-        // Hide action bar if needed
         supportActionBar?.hide()
 
-        // Initialize views
+        //Inicializar el botom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        // Set up window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { view, windowInsets ->
             val statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-
-            // Apply padding only to status bar
             view.setPadding(0, statusBars.top, 0, 0)
-
             windowInsets
         }
 
@@ -105,6 +94,7 @@ class MainContainerActivity : BaseActivity() {
         }
     }
 
+    //Función para actualizar el cart badge
      fun updateCartBadge() {
         val itemCount = cartManager.cartItemsCount()
         val cartItem = bottomNavigationView.menu.findItem(R.id.nav_cart)
@@ -121,39 +111,39 @@ class MainContainerActivity : BaseActivity() {
         }
     }
 
+    //Función para manejar la navegación del perfil
     private fun handleProfileNavigation() {
         lifecycleScope.launch {
             try {
-                // Check if we have a token
                 val token = tokenManager.getToken()
                 Log.d("TokenManager", "Token obtenido: $token")
                 if (token != null) {
-                    // Try to get user profile
+                    //Intentamos obtener el perfil
                     val userClient = RetrofitUserClient.createUserClient(TokenManager(this@MainContainerActivity))
                     val response = userClient.getUserProfile()
 
+                    //Si se encuentra se muestra el fragmento de perfil
                     if (response.isSuccessful) {
                         response.body()?.let { profile ->
                             if (profile.rol != "Visitante") {
-                                // Show user profile
                                 supportFragmentManager.beginTransaction()
                                     .replace(R.id.fragment_container, ProfileUserFragment.newInstance())
                                     .commit()
                             } else {
-                                // Show login screen for visitors
+                                //Sino se muestra el de login
                                 showLoginScreen()
                             }
                         }
                     } else {
-                        // Error getting profile, show login
+                        //Si existe un error, se muestra el login
                         showLoginScreen()
                     }
                 } else {
-                    // No token, show login
+                    //Si no hay token, se muestra el login
                     showLoginScreen()
                 }
             } catch (e: Exception) {
-                // Error occurred, show login
+                //Si ocurrio un error, se muestra el login
                 showLoginScreen()
             }
         }

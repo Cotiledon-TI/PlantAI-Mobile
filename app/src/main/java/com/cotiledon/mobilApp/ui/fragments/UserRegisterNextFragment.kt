@@ -102,7 +102,7 @@ class UserRegisterNextFragment : Fragment() {
             "Magallanes" to listOf("Punta Arenas", "Laguna Blanca", "Río Verde", "San Gregorio", "Cabo de Hornos", "Antártica", "Porvenir", "Primavera", "Timaukel", "Natales", "Torres del Paine")
         )
 
-        // Set up region adapter
+
         val regionAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -111,7 +111,6 @@ class UserRegisterNextFragment : Fragment() {
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         regionSpinner.adapter = regionAdapter
 
-        // Create default commune adapter
         val defaultCommuneAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -120,19 +119,16 @@ class UserRegisterNextFragment : Fragment() {
         defaultCommuneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         comunaSpinner.adapter = defaultCommuneAdapter
 
-        // Set up spinner listener with improved handling
         regionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedRegion = regions[position]
 
-                // Get communes based on selection
                 val communes = if (selectedRegion == "Seleccione una Región") {
                     listOf("Seleccione una Comuna")
                 } else {
                     communesByRegion[selectedRegion] ?: listOf("Seleccione una Comuna")
                 }
 
-                // Create and set commune adapter
                 val communeAdapter = ArrayAdapter(
                     requireContext(),
                     android.R.layout.simple_spinner_item,
@@ -143,7 +139,6 @@ class UserRegisterNextFragment : Fragment() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Reset to default commune adapter
                 comunaSpinner.adapter = defaultCommuneAdapter
             }
         }
@@ -161,10 +156,10 @@ class UserRegisterNextFragment : Fragment() {
         val addressRegex = Regex("^[^,]+,[^,]+(,[^,]+)?$")
         val address = addressEditText.text.toString().trim()
 
-        /*if (!addressRegex.matches(address)) {
-            addressEditText.error = "La dirección debe tener el formato: 'texto, texto[, texto]'"
+        if (address.isEmpty() || !addressRegex.matches(address)) {
+            addressEditText.error = "Dirección inválida"
             return false
-        }*/
+        }
 
         if (!termsCheckBox.isChecked) {
             termsCheckBox.error = "Debes aceptar los términos y condiciones"
@@ -181,7 +176,6 @@ class UserRegisterNextFragment : Fragment() {
 
                 if (registerResponse != null) {
                     if (registerResponse.isSuccessful) {
-                        // User registered, now login
                         val loginResponse = authClient.login(
                             registrationData.email,
                             registrationData.contrasena
@@ -210,7 +204,6 @@ class UserRegisterNextFragment : Fragment() {
     }
 
     private fun UserRegistrationData.toUserRegistration(): UserRegistrationData? {
-        // The base registration data already contains most fields from the first screen
         return this.telefono.takeIf { it.isNotBlank() }?.removePrefix("+")?.let {
             this.genero.takeIf { it != "Selecciona tu Género" }?.let { it1 ->
                 UserRegistrationData(
@@ -219,8 +212,8 @@ class UserRegisterNextFragment : Fragment() {
                     apellido = this.apellido,
                     nombreUsuario = this.nombreUsuario,
                     email = this.email,
-                    telefono = it, // Remove + prefix if present and not empty
-                    genero = it1, // Only include gender if actually selected
+                    telefono = it,
+                    genero = it1,
                     rut = this.rut,
                     fechaNacimiento = this.fechaNacimiento,
                 )
@@ -230,36 +223,29 @@ class UserRegisterNextFragment : Fragment() {
 
 
     private fun handleError(errorMessage: String) {
-        // We use viewLifecycleOwner.lifecycleScope to ensure we're respecting the Fragment's lifecycle
+
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
-                // Log the error for debugging
                 Log.e("UserRegisterNextFragment", "Error occurred: $errorMessage")
 
-                // Show error message to user
                 val context = context
                 if (context != null) {
                     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
                 }
 
-                // Enable the register button again if it was disabled
                 registerButton.isEnabled = true
 
-                // You might want to highlight specific fields based on the error
                 when {
                     errorMessage.contains("conexión", ignoreCase = true) -> {
-                        // Handle connection errors
                         showNetworkErrorDialog()
                     }
                 }
             } catch (e: Exception) {
-                // Catch any exceptions that might occur during error handling
                 Log.e("UserRegisterNextFragment", "Error in handleError: ${e.message}")
             }
         }
     }
 
-    // Helper function to show a network error dialog
     private fun showNetworkErrorDialog() {
         context?.let { ctx ->
             MaterialAlertDialogBuilder(ctx)
@@ -267,7 +253,6 @@ class UserRegisterNextFragment : Fragment() {
                 .setMessage("No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta nuevamente.")
                 .setPositiveButton("Reintentar") { dialog, _ ->
                     dialog.dismiss()
-                    // You could add retry logic here if needed
                 }
                 .setNegativeButton("Cancelar") { dialog, _ ->
                     dialog.dismiss()

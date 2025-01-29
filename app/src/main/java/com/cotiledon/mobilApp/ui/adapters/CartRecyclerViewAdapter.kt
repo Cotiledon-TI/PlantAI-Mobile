@@ -30,8 +30,7 @@ class CartRecyclerViewAdapter (private val cartPlants: MutableList<CartPlant>,
                                private val cartStorageManager: CartStorageManager,
                                private val onItemRemoved: () -> Unit,
                                private val scope: CoroutineScope
-) :
-    RecyclerView.Adapter<CartRecyclerViewAdapter.CartViewHolder>(){
+) : RecyclerView.Adapter<CartRecyclerViewAdapter.CartViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val inflater = LayoutInflater.from(parent.context).inflate(R.layout.item_shopping_cart,
@@ -98,11 +97,11 @@ class CartRecyclerViewAdapter (private val cartPlants: MutableList<CartPlant>,
             .setTitle("Eliminar producto")
             .setMessage("¿Estás seguro de que deseas eliminar este producto del carrito?")
             .setPositiveButton("Eliminar") { dialog, _ ->
-                // Launch coroutine for server delete
+                //Se lanza corrutina para eliminar el producto
                 scope.launch {
                     cartStorageManager.removeProductFromCart(plant.plantId)
 
-                    // These operations should be done on the main thread
+                    //Se actualiza el carrito en el thread principal
                     withContext(Dispatchers.Main) {
                         cartPlants.removeAt(position)
                         notifyItemRemoved(position)
@@ -173,6 +172,7 @@ class CartRecyclerViewAdapter (private val cartPlants: MutableList<CartPlant>,
         val productName: TextView = itemView.findViewById(R.id.product_name_shopping)
         val productQuantity: TextView = itemView.findViewById(R.id.quantity_shopping)
         val productCurrentPrice: TextView = itemView.findViewById(R.id.current_price_shopping)
+        //Futuros atrubutos para manejo de descuentos
         val productDiscount: TextView = itemView.findViewById(R.id.discount_shopping)
         val productNormalPrice: TextView = itemView.findViewById(R.id.normal_price)
         val deleteButton: ImageButton = itemView.findViewById(R.id.delete_button_shopping)

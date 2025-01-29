@@ -37,19 +37,19 @@ class CartStorageManager (private val context: Context, private val tokenManager
     private var serverCartId: Int? = null
 
     suspend fun getCartId(): Int? {
-        // First check cached cart ID
+        //Primero, intentamos obtener el ID del carrito almacenado localmente
         if (serverCartId != null) {
             return serverCartId
         }
 
         try {
-            // Check for existing visitor token first
+            //Si no lo conseguimos, intentamos obtenerlo del servidor
             if (tokenManager.isVisitor()) {
-                // If we're a visitor but token expired, try to reuse the same visitor ID
+                //Si es un visitante, intentamos obtener el carrito existente
                 val userId = tokenManager.getUserId()
                 if (userId != -1) {
                     try {
-                        // Try to get existing cart for this visitor
+                        //Intentamos obtener el carrito
                         val response = cartClient.getUserCart(userId)
                         if (response.isSuccessful) {
                             val cart = response.body()
@@ -63,22 +63,24 @@ class CartStorageManager (private val context: Context, private val tokenManager
                 }
             }
 
-            // If we get here, we either don't have a visitor profile or couldn't recover the existing one
+            //Si llegamos a esta linea, no hay carrito existente o no es un visitante. Por lo tanto,
+            // creamos uno nuevo
             if (!tokenManager.hasValidToken()) {
-                // Only create new visitor profile if we don't have one
+                //Solo crear un visitante si no tenemos un token valido
                 if (!tokenManager.isVisitor()) {
                     val visitorResponse = createVisitorProfile()
                     visitorResponse?.let {
                         tokenManager.saveVisitorAuthData(it)
                     } ?: return null
                 } else {
-                    // We have a visitor profile but invalid token - something went wrong
+                    //Tenemos un perfil visitante, pero no tenemos un token valido,
+                    // algo ha salido mal
                     Log.e("CartStorageManager", "Invalid token for existing visitor")
                     return null
                 }
             }
 
-            // Now we should have a valid token (visitor or regular)
+            //Ahora deberiamos tener un token valid (ya sea de un usuario o de un visitante)
             val userId = tokenManager.getUserId()
             if (userId != -1) {
                 val response = cartClient.getUserCart(userId)
@@ -91,7 +93,7 @@ class CartStorageManager (private val context: Context, private val tokenManager
                         serverCartId
                     }
                     404 -> {
-                        // Create new cart
+                        //Creamos el carrito
                         val createResponse = cartClient.createCart(userId)
                         when (createResponse.code()) {
                             201 -> {
@@ -128,9 +130,7 @@ class CartStorageManager (private val context: Context, private val tokenManager
     private fun handleAuthenticationError() {
 
         //TODO: Add authentication error handling
-        //Navigate back to login
-        //This requires some way to access the activity/navigation
-        //You might want to use a callback or event bus for this
+        //Navegar a la pantalla de inicio de sesión
         (context as? BaseActivity)?.let { activity ->
             activity.runOnUiThread {
                 activity.supportFragmentManager.beginTransaction()
@@ -432,13 +432,13 @@ class CartStorageManager (private val context: Context, private val tokenManager
         val queueType = object : TypeToken<MutableList<QueuedOperation>>() {}.type
         val queue = gson.fromJson<MutableList<QueuedOperation>>(queueJson, queueType)
 
-        // Add new operation
+        //Agregar nueva operación
         queue.add(operation)
 
-        // Save updated queue
+        //Guardar cola actualizada
         prefs.edit().putString(queueKey, gson.toJson(queue)).apply()
 
-        // Process queue
+        //Cola del proceso
         processQueue()
     }
 
@@ -502,7 +502,7 @@ class CartStorageManager (private val context: Context, private val tokenManager
                     }
                 }
 
-                // Save updated queue
+                //Guardar la cola actualizada
                 prefs.edit().putString(queueKey, gson.toJson(queue)).apply()
 
             } catch (e: Exception) {

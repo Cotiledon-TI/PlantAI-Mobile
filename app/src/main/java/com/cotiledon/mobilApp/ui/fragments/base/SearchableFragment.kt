@@ -4,10 +4,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.cotiledon.mobilApp.ui.helpers.SearchBarHelper
 
-/**
- * Base fragment class that provides search functionality.
- * Fragments that need search capabilities should extend this class
- * and implement the SearchBarHelper.SearchCallback interface.
+/*
+ Fragmento base para poder manejar la barra de busqueda.
+ Los fragmentos que quieran manejar la barra de busqueda deben extender esta clase
+ e implementar el SearchBarHelper.SearchCallback interface.
  */
 abstract class SearchableFragment : Fragment(), SearchBarHelper.SearchCallback {
     private var searchBarHelper: SearchBarHelper? = null
@@ -20,33 +20,33 @@ abstract class SearchableFragment : Fragment(), SearchBarHelper.SearchCallback {
     private fun setupSearchBar(view: View) {
         searchBarHelper = SearchBarHelper(view, this)
 
-        // Set default hint - can be overridden in child fragments
+        //Setear hint base. (Puede ser sobrescrito en los childs)
         searchBarHelper?.setHint(getSearchHint())
 
-        // Configure camera button visibility
+        //Configurar visibilidad del boton de camara
         searchBarHelper?.setCameraButtonEnabled(isCameraEnabled())
     }
 
-    // Can be overridden by child fragments to customize the search hint
+    //Puede ser sobrescrito en los childs para cambiar el hint
     protected open fun getSearchHint(): String {
         return "Buscar..."
     }
 
-    // Can be overridden by child fragments to enable/disable camera
+    //Puede ser sobrescrito en los childs para cambiar la visibilidad del boton de camara
     protected open fun isCameraEnabled(): Boolean {
         return false
     }
 
-    // Default implementations of SearchCallback methods
+    //Implementaciones por defecto para el SearchBarHelper
     override fun onQueryTextSubmit(query: String) {
-        // To be implemented by child fragments
+        //A ser implementado por los childs
     }
 
     override fun onQueryTextChange(newText: String) {
-        // To be implemented by child fragments
+        //A ser implementado por los childs
     }
 
     override fun onCameraButtonClick() {
-        // To be implemented by child fragments
+        //A ser implementado por los childs
     }
 }

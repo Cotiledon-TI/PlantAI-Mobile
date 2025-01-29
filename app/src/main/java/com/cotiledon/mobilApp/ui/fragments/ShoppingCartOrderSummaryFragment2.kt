@@ -21,11 +21,11 @@ import com.cotiledon.mobilApp.ui.managers.TokenManager
 class ShoppingCartOrderSummaryFragment2 : Fragment() {
     private lateinit var regionSpinner: Spinner
     private lateinit var comunaSpinner: Spinner
-    // Add new fields for street address components
+
     private lateinit var streetNameEditText: EditText
     private lateinit var streetNumberEditText: EditText
-    private lateinit var departmentEditText: EditText  // For apartment/unit number
-    private lateinit var referenceEditText: EditText   // For delivery instructions/reference
+    private lateinit var departmentEditText: EditText
+    private lateinit var referenceEditText: EditText
     private lateinit var receiverNameEditText: EditText
     private lateinit var finalizeButton: Button
     private lateinit var modifyInfoText: TextView
@@ -124,25 +124,22 @@ class ShoppingCartOrderSummaryFragment2 : Fragment() {
     }
 
     private fun setupSpinners() {
-        // Create adapter for regions
         val regionAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            regions // Now this is a properly typed Array<String>
+            regions
         )
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         regionSpinner.adapter = regionAdapter
 
-        // Create initial adapter for communes with default option
         val defaultCommuneAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            arrayOf("Seleccione una Comuna") // Use Array instead of List
+            arrayOf("Seleccione una Comuna")
         )
         defaultCommuneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         comunaSpinner.adapter = defaultCommuneAdapter
 
-        // Set up the region selection listener
         regionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -152,35 +149,33 @@ class ShoppingCartOrderSummaryFragment2 : Fragment() {
             ) {
                 val selectedRegion = regions[position]
 
-                // Get communes for selected region
                 val communes = communesByRegion[selectedRegion] ?:
                 arrayOf("Seleccione una Comuna")
 
-                // Create adapter for communes
                 val communeAdapter = ArrayAdapter(
                     requireContext(),
                     android.R.layout.simple_spinner_item,
-                    communes // This is now properly typed as Array<String>
+                    communes
                 )
                 communeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 comunaSpinner.adapter = communeAdapter
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                // Reset to default commune adapter
+
                 comunaSpinner.adapter = defaultCommuneAdapter
             }
         }
 
-        // Load existing details if available
+        //Cargar datos de envío si ya existen
         OrderManager.shippingDetails?.let { details ->
             if (details.region.isNotEmpty()) {
-                // Find index of saved region
+                //Encontrar index de la region
                 val regionIndex = regions.indexOf(details.region)
                 if (regionIndex != -1) {
                     regionSpinner.setSelection(regionIndex)
 
-                    // Get communes for this region
+                    //Get de communas para la region
                     val communes = communesByRegion[details.region]
                     if (communes != null && details.commune.isNotEmpty()) {
                         val communeIndex = communes.indexOf(details.commune)

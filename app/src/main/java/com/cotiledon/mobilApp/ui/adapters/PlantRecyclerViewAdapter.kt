@@ -104,46 +104,6 @@ class PlantRecyclerViewAdapter(
 
     inner class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-    @SuppressLint("NotifyDataSetChanged")
-    /*override fun filter(filters: PlantFilterParams) {
-        filteredPlants = plants.filter { plant ->
-            // Verificamos si la planta tiene detalles
-            val plantDetails = plant.planta
-            if (plantDetails == null) {
-                false // Si no tiene detalles, no pasa el filtro
-            } else {
-                // Verificamos cada filtro
-                val priceInRange = plant.precio.toFloat() in filters.priceRange
-
-                val heightInRange = when (plantDetails.tamano) {
-                    "S" -> filters.heightRange.contains(25f)
-                    "M" -> filters.heightRange.contains(50f)
-                    "L" -> filters.heightRange.contains(75f)
-                    "XL" -> filters.heightRange.contains(100f)
-                    else -> true
-                }
-
-                val cycleMatches = filters.cycle == null ||
-                        (filters.cycle == PlantCycle.ANNUAL && !plantDetails.ciclo) ||
-                        (filters.cycle == PlantCycle.PERENNIAL && plantDetails.ciclo)
-
-                val petFriendlyMatches = filters.isPetFriendly == null ||
-                        plantDetails.petFriendly == filters.isPetFriendly
-
-                val temperatureValue = TEMPERATURE_VALUES[plantDetails.toleranciaTemperatura] ?: 2f
-                val temperatureMatches = temperatureValue in filters.temperatureRange
-
-                val irrigationMatches = filters.irrigationType == null ||
-                        plantDetails.tipoRiego.equals(filters.irrigationType.toString(), ignoreCase = true)
-
-                // Combinamos todas las condiciones
-                priceInRange && heightInRange && cycleMatches &&
-                        petFriendlyMatches && temperatureMatches && irrigationMatches
-            }
-        }.toMutableList()
-
-        notifyDataSetChanged()
-    }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

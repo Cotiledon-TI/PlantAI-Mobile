@@ -39,29 +39,29 @@ class IAPromptFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize the callback
+        //Inicializar el callback
         backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleBackNavigation()
             }
         }
 
-        // Add the callback to the activity
+        //Agregar el callback a la actividad
         requireActivity().onBackPressedDispatcher.addCallback(
-            this, // LifecycleOwner
+            this, //Owner del lifecycle
             backPressedCallback
         )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Remove the callback when the view is destroyed
+        //Remover el callback cuando la vista es destruida
         backPressedCallback.remove()
     }
 
     companion object {
-        private const val MAX_IMAGE_DIMENSION = 800  // Maximum width or height in pixels
-        private const val COMPRESSION_QUALITY = 80   // Compression quality (0-100)
+        private const val MAX_IMAGE_DIMENSION = 800  //Settear la dimension maxima de la imagen
+        private const val COMPRESSION_QUALITY = 80   //Settear calidad de compresión
     }
 
     override fun onCreateView(
@@ -93,7 +93,7 @@ class IAPromptFragment : Fragment() {
                 showLoading(true)
                 val base64Image = convertImageToBase64()
 
-                // Create the request with the compressed image
+                //Crear el request con la imagen en base64 y el prompt
                 val request = IABase64Request(
                     base64 = base64Image,
                     consulta = consulta
@@ -134,20 +134,21 @@ class IAPromptFragment : Fragment() {
             var byteArrayOutputStream: ByteArrayOutputStream? = null
 
             try {
-                // First, we need to get the image dimensions
+                //Obtenemos las dimensiones de la imagen
                 val options = BitmapFactory.Options().apply {
-                    inJustDecodeBounds = true  // This option allows us to read dimensions without loading the full image
+                    inJustDecodeBounds = true  //Esto nos permite leer las dimensiones sin cargar
+                // la imagen
                 }
                 BitmapFactory.decodeFile(photoPath, options)
 
-                // Calculate the scaling factor
+                //Calcular el factor de escala
                 val scaleFactor = calculateScaleFactor(
                     originalWidth = options.outWidth,
                     originalHeight = options.outHeight,
                     targetSize = MAX_IMAGE_DIMENSION
                 )
 
-                // Now load the scaled down image
+                //Ahora cargamos la imagen con el factor de escala
                 val bitmap = BitmapFactory.Options().apply {
                     inJustDecodeBounds = false
                     inSampleSize = scaleFactor
@@ -155,10 +156,10 @@ class IAPromptFragment : Fragment() {
                     BitmapFactory.decodeFile(photoPath, scaledOptions)
                 } ?: throw IllegalStateException("Error cargando la imagen")
 
-                // Resize the bitmap if it's still too large
+                //Volver a modificar la imagen si es necesario
                 val resizedBitmap = resizeBitmapIfNeeded(bitmap, MAX_IMAGE_DIMENSION)
 
-                // Convert to byte array with compression
+                //Convertir la imagen a base64
                 byteArrayOutputStream = ByteArrayOutputStream()
                 resizedBitmap.compress(
                     Bitmap.CompressFormat.JPEG,
@@ -166,13 +167,13 @@ class IAPromptFragment : Fragment() {
                     byteArrayOutputStream
                 )
 
-                // Create base64 string with proper header
+                //Crear el string de base64
                 val imageBytes = byteArrayOutputStream.toByteArray()
                 val base64String = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
                 "data:image/jpeg;base64,$base64String"
 
             } finally {
-                // Clean up resources
+                //Limpiar recursos
                 byteArrayOutputStream?.close()
             }
         }
@@ -183,7 +184,7 @@ class IAPromptFragment : Fragment() {
         originalHeight: Int,
         targetSize: Int
     ): Int {
-        // Calculate the smallest power of 2 that will result in dimensions <= targetSize
+        //Calcular la menor escala de dos que cumpla con la condicion de targetSize
         var scaleFactor = 1
         while (originalWidth / (scaleFactor * 2) >= targetSize ||
             originalHeight / (scaleFactor * 2) >= targetSize) {
@@ -196,12 +197,12 @@ class IAPromptFragment : Fragment() {
         val width = bitmap.width
         val height = bitmap.height
 
-        // If the bitmap is already small enough, return it as is
+        //Si el bipmap ya cumple con el tamaño maximo, no hacer nada
         if (width <= maxDimension && height <= maxDimension) {
             return bitmap
         }
 
-        // Calculate new dimensions while maintaining aspect ratio
+        //Calcular nuevas dimensiones mientras mantenemos la proporción
         val ratio = width.toFloat() / height.toFloat()
         val newWidth: Int
         val newHeight: Int
@@ -219,7 +220,7 @@ class IAPromptFragment : Fragment() {
 
 
     private fun handleSuccessResponse(response: IAResponse) {
-        // Instead of passing a PlantFilterParams object, pass individual values
+        //En vez de mostrar el resultado directamente, navegar al fragmento de catalogo
         val catalogFragment = CatalogFragment().apply {
             arguments = Bundle().apply {
                 putInt("environment", response.data.idEntorno)
@@ -247,7 +248,7 @@ class IAPromptFragment : Fragment() {
         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    // Show loading state with progress indicator
+    //Mostrar el indicador de carga y deshabilitar el boton
     private fun showLoading(show: Boolean) {
         view?.findViewById<ProgressBar>(R.id.loading_indicator)?.visibility =
             if (show) View.VISIBLE else View.GONE

@@ -17,21 +17,19 @@ data class ProfileResponse(
 )
 
 fun ProfileResponse.toVisitorResponse(): VisitorResponse {
-    // We create a new VisitorResponse with the mapped fields
+    //Creamos un VisitorResponse a partir de un ProfileResponse
     return VisitorResponse(
-        // Basic identification fields are directly mapped
+        //Campos básicos son rellenados automáticamente
         id = this.id,
         nombre = this.nombre,
         apellido = this.apellido,
         nombreUsuario = this.nombreUsuario,
         email = this.email,
         rut = this.rut,
-
-        // For visitor profiles, we know the role will always be "Visitante"
         rol = "Visitante",
 
-        // Convert the string list of addresses to proper Direccion objects
-        // If the addresses list is empty or invalid, we provide an empty list
+        //Convertimos las direcciones en una dirección con la estructura válida
+        //Si la dirección no es válida, se omite
         direcciones = this.direcciones.mapNotNull { direccionStr ->
             try {
                 val parts = direccionStr.split(",")
@@ -48,9 +46,7 @@ fun ProfileResponse.toVisitorResponse(): VisitorResponse {
             }
         },
 
-        // These fields would typically come from the ProfileResponse
-        // You'll need to add them to your ProfileResponse class if they're not there
-        access_token = this.access_token ?: "",  // Add this field to ProfileResponse
-        expToken = this.expToken ?: 0L          // Add this field to ProfileResponse
+        access_token = this.access_token ?: "",
+        expToken = this.expToken ?: 0L
     )
 }

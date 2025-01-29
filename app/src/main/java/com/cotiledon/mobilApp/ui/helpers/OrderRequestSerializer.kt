@@ -12,7 +12,6 @@ class OrderRequestSerializer : JsonSerializer<OrderRequest> {
     ): JsonElement {
         val jsonObject = JsonObject()
 
-        // Add all the regular fields
         jsonObject.addProperty("fechaCreacion", src.fechaCreacion)
         jsonObject.addProperty("idMedioPago", src.idMedioPago)
         jsonObject.addProperty("idEstado", src.idEstado)
@@ -20,7 +19,6 @@ class OrderRequestSerializer : JsonSerializer<OrderRequest> {
         jsonObject.addProperty("receptor", src.receptor)
         jsonObject.addProperty("fechaEntrega", src.fechaEntrega)
 
-        // Add the direccionEnvio object
         val direccionEnvio = JsonObject()
         direccionEnvio.addProperty("comuna", src.direccionEnvio.comuna)
         direccionEnvio.addProperty("calle", src.direccionEnvio.calle)
@@ -29,7 +27,6 @@ class OrderRequestSerializer : JsonSerializer<OrderRequest> {
         direccionEnvio.addProperty("referencia", src.direccionEnvio.referencia)
         jsonObject.add("direccionEnvio", direccionEnvio)
 
-        // Add the idxDireccion with the exact format needed
         jsonObject.addProperty("idxDireccion", src.idxDireccion)
 
         return jsonObject

@@ -63,7 +63,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
     private var hasMoreItems = true
     private var currentSearchQuery: String = ""
     private var isSearchMode = false
-    // Add a job to track and cancel ongoing searches
+    //Agregar un job para la busqueda
     private var searchJob: Job? = null
 
     //Guardado de filtros a nivel del fragment
@@ -73,12 +73,12 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
 
     private var popupWindow: PopupWindow? = null
 
-    // Add this method to show the AI explanation popup
+    //Se agrega esta función para cuando se navega desde la IA y se muestra el popup
     private fun showAIExplanationPopup(explanation: String) {
         val inflater = LayoutInflater.from(requireContext())
         val popupView = inflater.inflate(R.layout.ai_explanation_popup, null)
 
-        // Initialize the popup window
+        //Inicializar popup
         popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -89,21 +89,21 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
-        // Set the explanation text
+        //Agregar texto generado por IA
         popupView.findViewById<TextView>(R.id.ai_explanation_text).text = explanation
 
-        // Set up dismiss button
+        //Botton de dismiss
         popupView.findViewById<Button>(R.id.dismiss_button).setOnClickListener {
             popupWindow?.dismiss()
         }
 
-        // Show the popup centered in the screen
+        //Centrar el popup en la pantalla
         val rootView = requireActivity().window.decorView.findViewById<View>(android.R.id.content)
         popupWindow?.showAtLocation(rootView, Gravity.CENTER, 0, 0)
 
-        // Add dim background
+        //Agregar transparencia del fondo del popup
         val dimBackground = ColorDrawable(Color.BLACK)
-        dimBackground.alpha = 120 // Value between 0-255
+        dimBackground.alpha = 120 //0 a 255
         popupWindow?.setBackgroundDrawable(dimBackground)
     }
 
@@ -120,9 +120,10 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
     ): View? {
         val view = inflater.inflate(R.layout.fragment_catalog, container, false)
 
-        // Construct PlantFilterParams from individual arguments
+        //Contruir PlantFilterParams a partir de los argumentos (para aplicar filtros en caso de
+        //que se navegue desde la IA)
         arguments?.let { args ->
-            if (args.containsKey("environment")) {  // Check if we have AI-provided filters
+            if (args.containsKey("environment")) {  //Checkear si se recibieron argumentos
                 currentFilters = PlantFilterParams(
                     environment = args.getInt("environment"),
                     petFriendly = args.getBoolean("pet_friendly"),
@@ -133,7 +134,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
 
                 )
 
-                // Show AI explanation if available
+                //Mostrar el popup
                 args.getString("ai_explanation")?.let { explanation ->
                     view.post {
                         showAIExplanationPopup(explanation)
@@ -184,7 +185,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
 
     override fun onDestroy() {
         super.onDestroy()
-        // Cancel any ongoing operations
+        //Cancelar cualquier busqueda en curso
         searchJob?.cancel()
         popupWindow?.dismiss()
         popupWindow = null
@@ -206,12 +207,12 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
         )
 
         val gridLayoutManager = GridLayoutManager(context, 2).apply {
-            // Tell the layout manager to span the loading indicator across all columns
+            //Posicionar el loading en el ancho completo de las dos columnas
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (adapter.getItemViewType(position)) {
-                        PlantRecyclerViewAdapter.VIEW_TYPE_LOADING -> 2  // Full width for loading
-                        else -> 1  // Normal width for items
+                        PlantRecyclerViewAdapter.VIEW_TYPE_LOADING -> 2  //Full width para carga
+                        else -> 1  //Solo una columna para items
                     }
                 }
             }
@@ -276,92 +277,86 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
     }
 
     private fun setupSearch() {
-        // Find the root view that contains the search bar components
-        // We'll use the searchbar_section from your layout which is included in the catalog fragment
+        //Encontrar el root que contiene el search bar
+        //(Se utiliza el searchbar integrado en el layout)
         val searchBarView = view?.findViewById<View>(R.id.searchbar_section)
 
-        // Only initialize if we successfully found the search bar view
+        //Solo inicializar si se encontro el view
         searchBarView?.let { rootView ->
-            // Create new SearchBarHelper instance with:
-            // - rootView: The view containing the search components
-            // - this: The fragment implementing SearchCallback interface
+            //Crear la instancia del SearchBarHelper con:
+            // - rootView: La vista raiz que contenga los elementos del search bar
+            // - this: El fragmento implementando el searchBar
             searchBarHelper = SearchBarHelper(rootView, this)
 
-            // Set an appropriate hint for the search
+            //Settear un hint apropiado
             searchBarHelper.setHint(getString(R.string.search_hint))
         }
     }
 
-    // Override search-related methods from SearchableFragment
+    //Sobreescribir el hint de busqueda
     override fun getSearchHint(): String {
         return getString(R.string.search_catalog_hint)
     }
 
-    // Modify the search callbacks to handle state transitions
+    //Modificar el comportamiento de busqueda al presionar enter
     override fun onQueryTextSubmit(query: String) {
         if (query.isNotEmpty()) {
-            // Switch to search mode and refresh the display
+            //Cambiar a modo de busqueda y refrescar la vista
             currentMode = DisplayMode.Search(query)
             refreshDisplay()
         }
     }
 
     override fun onQueryTextChange(newText: String) {
-        // Cancel any ongoing search
+        //Cancelar cualquier busqueda en curso
         searchJob?.cancel()
 
         if (newText.isEmpty()) {
-            // Reset to catalog mode with current filters
+            //Cambiar a modo de catalogo
             currentMode = DisplayMode.Catalog
 
-            // Clear existing plants
+            //Limpiar la lista de plantas
             adapter.clearPlants()
 
-            // Reset pagination
+            //Resetear paginacion
             currentPage = 1
             isLoading = false
             hasMoreItems = true
 
-            // Reload plants with current filters
+            //Recargar las plantas con los filtros actuales
             loadPlants()
         } else {
-            // Start new search
+            //Iniciar nueva busqueda
             searchJob = lifecycleScope.launch(Dispatchers.Main) {
                 try {
-                    delay(300) // Debounce delay
+                    delay(300) // Esperar 300ms antes de iniciar la busqueda
                     currentMode = DisplayMode.Search(newText)
 
-                    // Clear existing plants
                     adapter.clearPlants()
-
-                    // Reset pagination
                     currentPage = 1
                     isLoading = false
                     hasMoreItems = true
 
-                    // Load plants with search query
                     loadPlants()
                 } catch (e: CancellationException) {
-                    // Search was cancelled, do nothing
+                    //Hacer nada si la busqueda se cancela
                 }
             }
         }
     }
 
-    // New method to handle display refresh
+    //Nuevo metodo para refrescar la vista
     private fun refreshDisplay() {
-        // Cancel any ongoing search
+        //Cancelar cualquier busqueda en curso
         searchJob?.cancel()
 
         lifecycleScope.launch(Dispatchers.Main) {
             try {
-                // Clear existing data first
                 adapter.clearPlants()
                 currentPage = 1
                 isLoading = false
                 hasMoreItems = true
 
-                // Then load new data
                 loadPlants()
             } catch (e: Exception) {
                 handleError(e)
@@ -372,21 +367,18 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
 
 
     override fun onFiltersApplied(filterParams: PlantFilterParams) {
-        // Store the new filters
+        //Guardar nuevos filtros
         currentFilters = filterParams
 
-        // Switch back to catalog mode if we were in search mode
+        //Cambiar a modo de catalogo si estaba en modo de busqueda
         currentMode = DisplayMode.Catalog
 
-        // Clear existing plants and reset adapter
+        //Limpiar la lista de plantas
         adapter.clearPlants()
-
-        // Reset pagination
         currentPage = 1
         isLoading = false
         hasMoreItems = true
 
-        // Load plants with new filters
         loadPlants()
     }
 
@@ -404,7 +396,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
         val maxPrice = currentPlants.maxOfOrNull { it.precio.toFloat() } ?: 100000f
         bottomSheet.setMaxProductPrice(maxPrice)
 
-        // Set the target fragment to ensure the listener connection
+        //Settear el target fragment para el bottom sheet de filtros
         bottomSheet.setTargetFragment(this, 0)
         bottomSheet.show(parentFragmentManager, "filters")
 
@@ -507,7 +499,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
         return (this * context.resources.displayMetrics.density).toInt()
     }
 
-    // Modify loadPlants to use the new state management
+    //Modificar loadPlants para manejo de corrutinas
     private fun loadPlants() {
         if (isLoading || !hasMoreItems) return
         isLoading = true
@@ -518,7 +510,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
                 val retrofitClient = RetrofitCatalogClient.createCatalogClient()
                 val response: PlantResponse<Plant> = when (val mode = currentMode) {
                     is DisplayMode.Search -> {
-                        // For search mode, we don't apply filters
+                        //Para modo de busqueda, no aplicamos filtros
                         retrofitClient.searchPlants(
                             page = currentPage,
                             pageSize = pageSize,
@@ -526,7 +518,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
                         )
                     }
                     DisplayMode.Catalog -> {
-                        // For catalog mode, we apply current filters
+                        //Para modo de catálogo, aplicamos los filtros
                         retrofitClient.getPlants(
                             page = currentPage,
                             pageSize = pageSize,
@@ -564,10 +556,10 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
         Log.e(TAG, "Error loading plants", error)
 
         activity?.runOnUiThread {
-            // Hide loading state
+            //Esconder el indicador de carga
             adapter.hideLoading()
 
-            // Show error message
+            //Mostrar un mensaje de error
             val errorMessage = when (error) {
                 is IOException -> getString(R.string.error_network)
                 is HttpException -> getString(R.string.error_server)
@@ -578,7 +570,7 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
         }
     }
 
-    // Helper method to show appropriate empty state
+    //Metodo helper para mostrar el estado vacio
     private fun showEmptyState(mode: DisplayMode) {
         val message = when (mode) {
             is DisplayMode.Search -> getString(R.string.no_search_results, mode.query)
@@ -586,10 +578,9 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
         }
 
         activity?.runOnUiThread {
-            // Hide loading state first
             adapter.hideLoading()
 
-            // Show empty state message
+            //Mostrar mensaje de empty state
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
@@ -643,26 +634,6 @@ class CatalogFragment : SearchableFragment(), PlantFiltersBottomSheet.FilterList
                 }
             }
         }
-    }
-
-    private fun showRetryToast() {
-        Toast.makeText(
-            requireContext(),
-            "Error al cargar las plantas. Por favor, intente nuevamente.",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-
-    //Metodo para checkear si un producto ya está en el carrito o no
-    private fun isPlantInCart(plantId: String): Boolean {
-        return cartManager.loadCartItems().any { it.plantId == plantId }
-    }
-
-    //Metodo para obtener la cantidad de un producto en el carrito
-    private fun getPlantQuantityInCart(plantId: String): Int {
-        return cartManager.loadCartItems()
-            .find { it.plantId == plantId }
-            ?.plantQuantity ?: 0
     }
 
     //Función para navegar a la vista de detalle

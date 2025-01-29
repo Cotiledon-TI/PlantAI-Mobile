@@ -236,28 +236,25 @@ class ShoppingCartFragmentPay : Fragment(){
         }
     }
 
-    // Handle successful order completion
+    //Manejar la orden exitosa
     private fun handleSuccessfulOrder() {
-        // Clear cart and order data
         cartManager.clearCart()
         OrderManager.clearOrderData()
 
-        // Clear visitor details if applicable
+        //Limpiar los datos del visitante si es necesario
         if (tokenManager.isVisitor()) {
             OrderManager.clearVisitorDetails()
         }
 
-        // Update UI
+        //Actualizar el cart badge
         (activity as? MainContainerActivity)?.updateCartBadge()
 
-        // Navigate to gratitude screen
         val gratitudeFragment = ShoppingCartGratitudeFragment.newInstance()
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, gratitudeFragment)
             .commit()
     }
 
-    // Helper method for showing errors
     private fun showError(message: String) {
         activity?.runOnUiThread {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

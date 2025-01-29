@@ -17,9 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Helper class to manage search functionality across fragments.
- * This class handles the search bar UI interactions and delegates search actions
- * to the implementing fragment through callbacks.
+ * Helper para gestionar la barra de búsqueda y el botón de cámara de manera sencilla y global
  */
 class SearchBarHelper(
     private val rootView: View,
@@ -28,16 +26,16 @@ class SearchBarHelper(
     private var searchEditText: EditText? = null
     private var cameraButton: ImageView? = null
     private var debounceJob: Job? = null
-    private val DEBOUNCE_DELAY = 300L // Milliseconds
+    private val DEBOUNCE_DELAY = 300L
 
-    // Interface for search-related callbacks
+    //Interfaz para manejar los callbacks
     interface SearchCallback {
         fun onQueryTextSubmit(query: String)
         fun onQueryTextChange(newText: String)
         fun onCameraButtonClick()
     }
 
-    // Get the CoroutineScope from the root view's context
+    //Obtener el scope de la coroutine usada en el root view
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     init {
@@ -46,7 +44,7 @@ class SearchBarHelper(
     }
 
     private fun initializeViews() {
-        // Initialize views using the provided root view
+        //Inicializar vistas utilizando el rootView
         searchEditText = rootView.findViewById(R.id.search_edit_text)
         cameraButton = rootView.findViewById(R.id.camera_button)
     }
@@ -55,10 +53,10 @@ class SearchBarHelper(
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Cancel previous debounce job if it exists
+                //Cancelar el job anterior
                 debounceJob?.cancel()
 
-                // Create new debounce job
+                //Crear el nuevo job
                 debounceJob = scope.launch {
                     delay(DEBOUNCE_DELAY)
                     s?.toString()?.let { searchCallback.onQueryTextChange(it) }
@@ -68,7 +66,6 @@ class SearchBarHelper(
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        // Set up search action listener
         searchEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchEditText?.text?.toString()?.let {
@@ -80,7 +77,6 @@ class SearchBarHelper(
             }
         }
 
-        // Set up camera button listener
         cameraButton?.setOnClickListener {
             searchCallback.onCameraButtonClick()
         }
@@ -90,9 +86,6 @@ class SearchBarHelper(
         scope.cancel()
     }
 
-    /**
-     * Clears the current search text and resets the search state
-     */
     fun clearSearch() {
         searchEditText?.apply {
             setText("")
@@ -100,16 +93,11 @@ class SearchBarHelper(
         }
     }
 
-    /**
-     * Sets the hint text for the search EditText
-     */
+
     fun setHint(hint: String) {
         searchEditText?.hint = hint
     }
 
-    /**
-     * Enables or disables the camera button
-     */
     fun setCameraButtonEnabled(enabled: Boolean) {
         cameraButton?.apply {
             isEnabled = enabled
@@ -117,9 +105,6 @@ class SearchBarHelper(
         }
     }
 
-    /**
-     * Returns the current search text
-     */
     fun getCurrentSearchText(): String {
         return searchEditText?.text?.toString() ?: ""
     }

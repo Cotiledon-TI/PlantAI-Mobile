@@ -5,12 +5,12 @@ import java.io.Serializable
 data class ShippingDetails(
     val name: String,
     val lastName: String,
-    val address: String,        // Will store street name
+    val address: String,
     val commune: String,
     val region: String,
     val department: String? = null,
     val streetNumber: String? = null,
-    val reference: String? = null,  // Added reference field
+    val reference: String? = null,
     val email: String,
     val phone: String,
     val rut: String? = null

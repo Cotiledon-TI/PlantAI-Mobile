@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.recyclerview.widget.RecyclerView
 import com.cotiledon.mobilApp.ui.dataClasses.catalog.PlantFilterParams
 
+
+// Clase para adaptadores que puedan ser filtrados
 abstract class FilterableAdapter<T: Any, VH: RecyclerView.ViewHolder>(
     initialItems: List<T>
 ): RecyclerView.Adapter<VH>() {
@@ -14,8 +16,6 @@ abstract class FilterableAdapter<T: Any, VH: RecyclerView.ViewHolder>(
     @SuppressLint("NotifyDataSetChanged")
     open fun filter(filters: PlantFilterParams) {
         currentFilters = filters
-        // We don't need to filter here anymore since filtering happens server-side
-        // Just update the current filters
         notifyDataSetChanged()
     }
 
@@ -27,11 +27,9 @@ abstract class FilterableAdapter<T: Any, VH: RecyclerView.ViewHolder>(
         notifyDataSetChanged()
     }
 
-    // Modify updateItems to consider current filters
     fun updateItems(newItems: List<T>) {
         val startPosition = items.size
         items.addAll(newItems)
-        // Since filtering happens server-side, filtered items are the same as new items
         filteredItems.addAll(newItems)
         notifyItemRangeInserted(startPosition, newItems.size)
     }

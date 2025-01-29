@@ -110,7 +110,7 @@ class ShoppingCartFragment : Fragment() {
 
             view?.findViewById<TextView>(R.id.total_price)?.text = formatPrice(totalPrice)
         } catch (e: Exception) {
-            Log.e("ShoppingCartFragment", "Error calculating total price", e)
+            Log.e("ShoppingCartFragment", "Error calculando el precio total", e)
         }
     }
 
@@ -174,7 +174,7 @@ class ShoppingCartFragment : Fragment() {
                                 response.errorBody()?.string(),
                                 CartValidationErrorResponse::class.java
                             )
-                            Log.d("ShoppingCartFragment", "Error validating cart: $errorResponse")
+                            Log.d("ShoppingCartFragment", "Error validando el carrito: $errorResponse")
                             showConflictDialog(errorResponse)
                         }
                         else -> {
@@ -187,7 +187,7 @@ class ShoppingCartFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e("ShoppingCartFragment", "Error validating cart", e)
+                Log.e("ShoppingCartFragment", "Error validando el carrito", e)
                 Toast.makeText(
                     requireContext(),
                     "Error validando el carrito",
@@ -238,7 +238,7 @@ class ShoppingCartFragment : Fragment() {
         checkoutTimer?.cancel()
         checkoutTimer = object : CountDownTimer(5 * 60 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                // Optional: Update UI with remaining time
+                //TODO: Actualizar el timer en UI
                 val minutes = millisUntilFinished / 1000 / 60
                 val seconds = (millisUntilFinished / 1000) % 60
                 updateTimerDisplay(minutes, seconds)
@@ -252,9 +252,9 @@ class ShoppingCartFragment : Fragment() {
 
     //TODO: Mostrar timer en UI
     private fun updateTimerDisplay(minutes: Long, seconds: Long) {
-        // Optional: Show remaining time in UI
+        //Mostrar el timer
         activity?.runOnUiThread {
-            // Update timer display if you have one
+            //Actualizar el timer display
         }
     }
 

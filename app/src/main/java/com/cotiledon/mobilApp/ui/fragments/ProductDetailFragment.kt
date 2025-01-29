@@ -304,12 +304,12 @@ class ProductDetailFragment : Fragment() {
                         plantImage = args.getStringArrayList(ARG_PRODUCT_IMAGES)?.firstOrNull() ?: ""
                     )
 
-                    // Launch coroutine to handle the suspend function
+                    //Lanzar corrutina para manejar la adición del producto al carrito
                     viewLifecycleOwner.lifecycleScope.launch {
                         try {
                             cartManager.saveProductToCart(cartProduct)
 
-                            // Update UI on main thread
+                            //Actualizar la UI en el thread principal
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(
                                     requireContext(),
@@ -317,18 +317,18 @@ class ProductDetailFragment : Fragment() {
                                     Toast.LENGTH_SHORT
                                 ).show()
 
-                                // Update badge in activity
+                                //Actualizar el badge
                                 (activity as? MainContainerActivity)?.updateCartBadge()
                             }
                         } catch (e: Exception) {
-                            // Handle errors on main thread
+                            //Manejar errores en el main thread
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(
                                     requireContext(),
                                     "Error al añadir el producto al carrito",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                Log.e("ProductDetailFragment", "Error adding to cart", e)
+                                Log.e("ProductDetailFragment", "Error agregando producto al carrito", e)
                             }
                         }
                     }
